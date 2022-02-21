@@ -147,13 +147,21 @@ pub fn register_address(deps: DepsMut, info: MessageInfo, address: String) -> Re
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::GetCount {} => to_binary(&query_count(deps)?),
+        QueryMsg::GetAddresses {} => to_binary(&query_addresses(deps)?),
+        QueryMsg::GetRewards {} => to_binary(&query_rewards(deps)?),
+
     }
 }
 
-fn query_count(deps: Deps) -> StdResult<CountResponse> {
+fn query_addresses(deps: Deps) -> StdResult<AddressesResponse> {
     let state = STATE.load(deps.storage)?;
-    Ok(CountResponse { count: state.count })
+    Ok(AddressesResponse { total_addresses: state.total_addresses })
+}
+
+
+fn query_rewards(deps: Deps) -> StdResult<RewardsResponse> {
+    let state = STATE.load(deps.storage)?;
+    Ok(RewardsResponse { total_rewards: state.total_rewards })
 }
 
 #[cfg(test)]
